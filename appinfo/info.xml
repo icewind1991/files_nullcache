@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<info>
+	<id>files_nullcache</id>
+	<name>Null cache storage</name>
+	<description>Storage backend without cache for testing</description>
+	<licence>AGPL</licence>
+	<author>Robin Appelman</author>
+	<types>
+		<filesystem/>
+	</types>
+
+	<dependencies>
+		<owncloud min-version="9.0"/>
+	</dependencies>
+</info>
