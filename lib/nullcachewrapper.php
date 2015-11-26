@@ -27,6 +27,15 @@ use OC\Files\Storage\Wrapper\Wrapper;
  * Specialized version of Local storage with no filecache
  */
 class NullCacheWrapper extends Wrapper {
+	/**
+	 * @var \OC\Files\Storage\Local $storage
+	 */
+	protected $storage;
+
+	private $propagator;
+	private $updater;
+	private $scanner;
+	private $cache;
 
 	/**
 	 * @param string $path
@@ -34,24 +43,19 @@ class NullCacheWrapper extends Wrapper {
 	 * @return \OC\Files\Cache\HomeCache
 	 */
 	public function getCache($path = '', $storage = null) {
-		if (!$storage) {
-			$storage = $this->storage;
-		}
 		if (!isset($this->cache)) {
-			$this->cache = new NullCache($storage);
+			$this->cache = new NullCache($this->storage);
 		}
 		return $this->cache;
 	}
 
 	public function getScanner($path = '', $storage = null) {
-		if (!$storage) {
-			$storage = $this->storage;
-		}
 		if (!isset($this->scanner)) {
-			$this->scanner = new NullScanner($storage);
+			$this->scanner = new NullScanner($this->storage);
 		}
 		return $this->scanner;
 	}
+
 	/**
 	 * get a propagator instance for the cache
 	 *
@@ -59,13 +63,17 @@ class NullCacheWrapper extends Wrapper {
 	 * @return \OC\Files\Cache\Propagator
 	 */
 	public function getPropagator($storage = null) {
-		if (!$storage) {
-			$storage = $this->storage;
-		}
 		if (!isset($this->propagator)) {
-			$this->propagator = new NullPropagator($storage);
+			$this->propagator = new NullPropagator($this->storage);
 		}
 		return $this->propagator;
+	}
+
+	public function getUpdater($storage = null) {
+		if (!isset($this->updater)) {
+			$this->updater = new NullUpdater($this->storage);
+		}
+		return $this->updater;
 	}
 
 	public function hasUpdated($path, $time) {

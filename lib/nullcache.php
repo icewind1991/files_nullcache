@@ -74,6 +74,11 @@ class NullCache extends Cache {
 		if ($preventRecursion) {
 			return [];
 		}
+
+		if (!$this->storage->file_exists($path)) {
+			return false;
+		}
+
 		$preventRecursion = true;
 		$data = $this->storage->getMetaData($path);
 		$data['path'] = $path;
@@ -89,6 +94,7 @@ class NullCache extends Cache {
 		if ($data['mimetype'] === self::FOLDER_MIME) {
 			$data['size'] = 1;//WIP
 		}
+		$data['encrypted'] = false;
 		return $data;
 	}
 
@@ -104,6 +110,9 @@ class NullCache extends Cache {
 		while (($file = readdir($dh)) !== false) {
 			$files[] = $folder . '/' . $file;
 		}
+		$files = array_filter($files, function ($file) {
+			return basename($file) !== '.' && basename($file) !== '..';
+		});
 		return array_map(function ($file) {
 			return $this->get($file);
 		}, $files);
@@ -196,7 +205,7 @@ class NullCache extends Cache {
 				return $data['path'];
 			}, $subFolders);
 
-			$inFolders = array_map($inFolders, $subFolderPaths);
+			$inFolders = array_merge($inFolders, $subFolderPaths);
 		}
 
 		return $result;
