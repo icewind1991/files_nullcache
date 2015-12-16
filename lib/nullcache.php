@@ -113,6 +113,7 @@ class NullCache extends Cache {
 		$files = array_filter($files, function ($file) {
 			return basename($file) !== '.' && basename($file) !== '..';
 		});
+		$files = array_values($files);
 		return array_map(function ($file) {
 			return $this->get($file);
 		}, $files);

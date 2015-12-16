@@ -21,6 +21,7 @@
 
 namespace OCA\Files_NullCache;
 use OC\Files\Cache\Updater;
+use OCP\Files\Storage\IStorage;
 
 /**
  * Update the cache and propagate changes
@@ -39,8 +40,8 @@ class NullUpdater extends Updater {
 		return;
 	}
 
-	public function renameFromStorage(\OC\Files\Storage\Storage $sourceStorage, $source, $target) {
-		$sourceStorage->getCache()->remove($source);
+	public function renameFromStorage(IStorage $sourceStorage, $source, $target) {
+		$sourceStorage->getUpdater()->remove($source);
 	}
 
 	public function correctParentStorageMtime($internalPath) {
